@@ -1,0 +1,230 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html,body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Login Page --- */
+#username-page {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 90%;
+}
+
+#username-page h2 {
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+input {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 12px 15px;
+    width: 100%;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #764ba2;
+    outline: none;
+}
+
+.accent-button {
+    background: #764ba2;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+    box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+}
+
+.accent-button:hover {
+    background: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* --- Chat Page --- */
+#chat-page {
+    display: none; /* Hidden by default */
+    width: 100%;
+    height: 100%;
+}
+
+.chat-container {
+    max-width: 900px;
+    margin: 30px auto;
+    background: #fff;
+    height: calc(100% - 60px);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-header {
+    background: #f8f9fa;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+#messageArea {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #fcfcfc;
+}
+
+.message-item {
+    margin-bottom: 15px;
+    list-style-type: none;
+}
+
+.chat-message {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.chat-message .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    margin-right: 15px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+.chat-message .message-content {
+    background: #fff;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border-top-left-radius: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    max-width: 70%;
+    position: relative;
+    border: 1px solid #f0f0f0;
+}
+
+.chat-message .sender-name {
+    display: block;
+    color: #999;
+    font-size: 12px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.chat-message .text-content {
+    color: #444;
+    line-height: 1.5;
+}
+
+
+/* Self Messages */
+.chat-message.self {
+    flex-direction: row-reverse;
+}
+
+.chat-message.self .avatar {
+    margin-right: 0;
+    margin-left: 15px;
+}
+
+.chat-message.self .message-content {
+    background: #764ba2;
+    color: #fff;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 0;
+    box-shadow: 0 4px 10px rgba(118, 75, 162, 0.3);
+    border: none;
+}
+
+.chat-message.self .sender-name {
+    display: none; /* Hide name for self */
+}
+
+.chat-message.self .text-content {
+    color: #fff;
+}
+
+
+/* Event Messages (Join/Leave) */
+.event-message {
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    margin: 15px 0;
+    font-style: italic;
+}
+
+
+/* Input Area */
+.input-group {
+    padding: 20px;
+    background: #fff;
+    border-top: 1px solid #eee;
+}
+
+.input-container {
+    display: flex;
+    gap: 10px;
+}
+
+.input-container input {
+    flex: 1;
+}
+
+/* Avatar Colors (randomized in JS) */
+.bg-red { background-color: #e53935; }
+.bg-pink { background-color: #d81b60; }
+.bg-purple { background-color: #8e24aa; }
+.bg-indigo { background-color: #3949ab; }
+.bg-blue { background-color: #1e88e5; }
+.bg-teal { background-color: #00897b; }
+.bg-green { background-color: #43a047; }
+.bg-orange { background-color: #fb8c00; }

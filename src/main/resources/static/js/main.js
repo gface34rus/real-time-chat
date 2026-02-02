@@ -7,9 +7,12 @@ var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
+var typingIndicator = document.querySelector('#typingIndicator');
 
 var stompClient = null;
 var username = null;
+var typingTimeout = null;
+var lastTypingTime = 0;
 
 var colors = [
     'bg-red', 'bg-pink', 'bg-purple', 'bg-indigo', 'bg-blue', 'bg-teal', 'bg-green', 'bg-orange'
@@ -67,9 +70,37 @@ function sendMessage(event) {
     event.preventDefault();
 }
 
+function sendTypingSignal() {
+    var now = new Date().getTime();
+    if (!stompClient) return;
+
+    // Throttle: send typing signal at most once every 1 second
+    if (now - lastTypingTime > 1000) {
+        var chatMessage = {
+            sender: username,
+            type: 'TYPING'
+        };
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+        lastTypingTime = now;
+    }
+}
+
 
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
+
+    // Handle TYPING message
+    if (message.type === 'TYPING') {
+        if (message.sender !== username) {
+            showTypingIndicator(message.sender);
+        }
+        return; // Don't process as a chat message
+    }
+
+    // Hide typing indicator immediately if we receive a CHAT message from that user
+    if (message.type === 'CHAT' && message.sender !== username) {
+        hideTypingIndicator();
+    }
 
     var messageElement = document.createElement('li');
     messageElement.classList.add('message-item');
@@ -122,6 +153,23 @@ function onMessageReceived(payload) {
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
+function showTypingIndicator(sender) {
+    var textSpan = typingIndicator.querySelector('span:first-child');
+    textSpan.textContent = sender + ' is typing...';
+    typingIndicator.classList.remove('hidden');
+
+    if (typingTimeout) {
+        clearTimeout(typingTimeout);
+    }
+
+    // Hide after 2.5 seconds of inactivity
+    typingTimeout = setTimeout(hideTypingIndicator, 2500);
+}
+
+function hideTypingIndicator() {
+    typingIndicator.classList.add('hidden');
+}
+
 
 function getAvatarColor(messageSender) {
     var hash = 0;
@@ -135,3 +183,4 @@ function getAvatarColor(messageSender) {
 
 usernameForm.addEventListener('submit', connect, true);
 messageForm.addEventListener('submit', sendMessage, true);
+messageInput.addEventListener('input', sendTypingSignal, true);

@@ -4,7 +4,8 @@
     box-sizing: border-box;
 }
 
-html,body {
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -75,7 +76,8 @@ input:focus {
 
 /* --- Chat Page --- */
 #chat-page {
-    display: none; /* Hidden by default */
+    display: none;
+    /* Hidden by default */
     width: 100%;
     height: 100%;
 }
@@ -86,7 +88,7 @@ input:focus {
     background: #fff;
     height: calc(100% - 60px);
     border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -137,7 +139,7 @@ input:focus {
     font-weight: bold;
     color: #fff;
     margin-right: 15px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 .chat-message .message-content {
@@ -145,7 +147,7 @@ input:focus {
     padding: 12px 18px;
     border-radius: 12px;
     border-top-left-radius: 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     max-width: 70%;
     position: relative;
     border: 1px solid #f0f0f0;
@@ -185,7 +187,8 @@ input:focus {
 }
 
 .chat-message.self .sender-name {
-    display: none; /* Hide name for self */
+    display: none;
+    /* Hide name for self */
 }
 
 .chat-message.self .text-content {
@@ -220,11 +223,77 @@ input:focus {
 }
 
 /* Avatar Colors (randomized in JS) */
-.bg-red { background-color: #e53935; }
-.bg-pink { background-color: #d81b60; }
-.bg-purple { background-color: #8e24aa; }
-.bg-indigo { background-color: #3949ab; }
-.bg-blue { background-color: #1e88e5; }
-.bg-teal { background-color: #00897b; }
-.bg-green { background-color: #43a047; }
-.bg-orange { background-color: #fb8c00; }
+.bg-red {
+    background-color: #e53935;
+}
+
+.bg-pink {
+    background-color: #d81b60;
+}
+
+.bg-purple {
+    background-color: #8e24aa;
+}
+
+.bg-indigo {
+    background-color: #3949ab;
+}
+
+.bg-blue {
+    background-color: #1e88e5;
+}
+
+.bg-teal {
+    background-color: #00897b;
+}
+
+.bg-green {
+    background-color: #43a047;
+}
+
+.bg-orange {
+    background-color: #fb8c00;
+}
+
+/* Typing Indicator */
+.typing-indicator {
+    padding: 10px 20px;
+    font-size: 13px;
+    color: #888;
+    font-style: italic;
+    background: #fcfcfc;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+}
+
+.typing-indicator.hidden {
+    display: none;
+}
+
+.typing-dots span {
+    animation: blink 1.4s infinite both;
+    margin-left: 2px;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0.2;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.2;
+    }
+}

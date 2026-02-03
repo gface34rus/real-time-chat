@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
 </head>
+
 <body>
 
     <noscript>
@@ -38,9 +40,16 @@
             <ul id="messageArea">
                 <!-- Messages will appear here -->
             </ul>
+            <div id="typingIndicator" class="typing-indicator hidden">
+                <span>Someone is typing...</span>
+                <div class="typing-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                </div>
+            </div>
             <div class="input-group">
                 <form id="messageForm" name="messageForm" class="input-container">
-                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off"
+                        class="form-control" />
                     <button type="submit" class="accent-button">Send</button>
                 </form>
             </div>
@@ -53,4 +62,5 @@
     <!-- Main JS -->
     <script src="/js/main.js"></script>
 </body>
+
 </html>

@@ -14,6 +14,11 @@ var username = null;
 var typingTimeout = null;
 var lastTypingTime = 0;
 
+// Simple "Pop" sound
+var notificationSound = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"); // Short placeholder, will use a real one or just let the user know it's a placeholder if it fails.
+// Let's use a better base64 for a real "pop" sound to ensure it works.
+notificationSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg"); // Using a reliable URL for now as Base64 can be long.
+
 var colors = [
     'bg-red', 'bg-pink', 'bg-purple', 'bg-indigo', 'bg-blue', 'bg-teal', 'bg-green', 'bg-orange'
 ];

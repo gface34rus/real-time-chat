@@ -31,6 +31,11 @@ function connect(event) {
         chatPage.classList.remove('hidden');
         chatPage.style.display = 'block'; // Ensure it's visible
 
+        // Request notification permission
+        if ("Notification" in window && Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
@@ -105,6 +110,18 @@ function onMessageReceived(payload) {
     // Hide typing indicator immediately if we receive a CHAT message from that user
     if (message.type === 'CHAT' && message.sender !== username) {
         hideTypingIndicator();
+
+        // Play Sound
+        notificationSound.play().catch(function (error) {
+            console.log("Audio play failed: " + error);
+        });
+
+        // Show Browser Notification if hidden
+        if (document.hidden && Notification.permission === "granted") {
+            new Notification("New message from " + message.sender, {
+                body: message.content
+            });
+        }
     }
 
     var messageElement = document.createElement('li');

@@ -56,6 +56,15 @@ function onConnected() {
     )
 
     // connectingElement.classList.add('hidden');
+
+    // Load History
+    fetch('/api/messages')
+        .then(response => response.json())
+        .then(messages => {
+            messages.forEach(message => {
+                displayMessage(message);
+            });
+        });
 }
 
 
@@ -98,7 +107,10 @@ function sendTypingSignal() {
 
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
+    displayMessage(message);
+}
 
+function displayMessage(message) {
     // Handle TYPING message
     if (message.type === 'TYPING') {
         if (message.sender !== username) {

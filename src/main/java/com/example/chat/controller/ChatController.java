@@ -42,13 +42,16 @@ public class ChatController {
     public ChatMessage addUser(@Payload ChatMessage chatMessage,
             SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        var sessionAttributes = headerAccessor.getSessionAttributes();
+        if (sessionAttributes != null) {
+            sessionAttributes.put("username", chatMessage.getSender());
 
-        // Default room
-        if (chatMessage.getRoomId() == null || chatMessage.getRoomId().isEmpty()) {
-            chatMessage.setRoomId("public");
+            // Default room
+            if (chatMessage.getRoomId() == null || chatMessage.getRoomId().isEmpty()) {
+                chatMessage.setRoomId("public");
+            }
+            sessionAttributes.put("room_id", chatMessage.getRoomId());
         }
-        headerAccessor.getSessionAttributes().put("room_id", chatMessage.getRoomId());
 
         // Notify room
         messagingTemplate.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);

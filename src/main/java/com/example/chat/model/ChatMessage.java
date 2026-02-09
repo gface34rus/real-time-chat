@@ -26,6 +26,10 @@ public class ChatMessage {
     private String sender;
     private MessageType type;
 
+    // Default room is "public"
+    @Builder.Default
+    private String roomId = "public";
+
     private Date timestamp;
 
 }

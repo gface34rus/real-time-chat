@@ -8,20 +8,21 @@ var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 var typingIndicator = document.querySelector('#typingIndicator');
+var roomList = document.querySelector('#roomList');
+var chatTitle = document.querySelector('#chat-title');
 
 var stompClient = null;
 var username = null;
 var typingTimeout = null;
 var lastTypingTime = 0;
-
-// Simple "Pop" sound
-var notificationSound = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"); // Short placeholder, will use a real one or just let the user know it's a placeholder if it fails.
-// Let's use a better base64 for a real "pop" sound to ensure it works.
-notificationSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg"); // Using a reliable URL for now as Base64 can be long.
+var currentRoomId = 'public';
+var currentSubscription = null;
 
 var colors = [
     'bg-red', 'bg-pink', 'bg-purple', 'bg-indigo', 'bg-blue', 'bg-teal', 'bg-green', 'bg-orange'
 ];
+
+var notificationSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
 
 function connect(event) {
     username = document.querySelector('#name').value.trim();
@@ -29,9 +30,8 @@ function connect(event) {
     if (username) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
-        chatPage.style.display = 'block'; // Ensure it's visible
+        chatPage.style.display = 'block';
 
-        // Request notification permission
         if ("Notification" in window && Notification.permission !== "granted") {
             Notification.requestPermission();
         }
@@ -46,19 +46,44 @@ function connect(event) {
 
 
 function onConnected() {
-    // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
+    enterRoom(currentRoomId);
+}
 
-    // Tell your username to the server
+function enterRoom(roomId) {
+    currentRoomId = roomId;
+
+    // Update UI
+    chatTitle.textContent = roomId.charAt(0).toUpperCase() + roomId.slice(1) + ' Room';
+
+    // Update sidebar active state
+    var roomItems = document.querySelectorAll('.room-item');
+    roomItems.forEach(item => {
+        if (item.getAttribute('data-room') === roomId) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+
+    // Unsubscribe from previous room
+    if (currentSubscription) {
+        currentSubscription.unsubscribe();
+    }
+
+    // Clear Area
+    messageArea.innerHTML = '';
+
+    // Subscribe to new room
+    currentSubscription = stompClient.subscribe('/topic/' + roomId, onMessageReceived);
+
+    // Notify server we joined (this also updates session attributes)
     stompClient.send("/app/chat.addUser",
         {},
-        JSON.stringify({ sender: username, type: 'JOIN' })
-    )
-
-    // connectingElement.classList.add('hidden');
+        JSON.stringify({ sender: username, type: 'JOIN', roomId: roomId })
+    );
 
     // Load History
-    fetch('/api/messages')
+    fetch('/api/messages?roomId=' + roomId)
         .then(response => response.json())
         .then(messages => {
             messages.forEach(message => {
@@ -80,7 +105,8 @@ function sendMessage(event) {
         var chatMessage = {
             sender: username,
             content: messageInput.value,
-            type: 'CHAT'
+            type: 'CHAT',
+            roomId: currentRoomId
         };
 
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
@@ -97,7 +123,8 @@ function sendTypingSignal() {
     if (now - lastTypingTime > 1000) {
         var chatMessage = {
             sender: username,
-            type: 'TYPING'
+            type: 'TYPING',
+            roomId: currentRoomId
         };
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
         lastTypingTime = now;
@@ -116,22 +143,17 @@ function displayMessage(message) {
         if (message.sender !== username) {
             showTypingIndicator(message.sender);
         }
-        return; // Don't process as a chat message
+        return;
     }
 
-    // Hide typing indicator immediately if we receive a CHAT message from that user
     if (message.type === 'CHAT' && message.sender !== username) {
         hideTypingIndicator();
-
-        // Play Sound
-        notificationSound.play().catch(function (error) {
-            console.log("Audio play failed: " + error);
-        });
+        notificationSound.play().catch(function (error) { console.log(error); });
 
         // Show Browser Notification if hidden
         if (document.hidden && Notification.permission === "granted") {
-            new Notification("New message from " + message.sender, {
-                body: message.content
+            new Notification("New message in " + currentRoomId, {
+                body: message.sender + ": " + message.content
             });
         }
     }
@@ -214,6 +236,14 @@ function getAvatarColor(messageSender) {
     var index = Math.abs(hash % colors.length);
     return colors[index];
 }
+
+// Room Click Listener
+roomList.addEventListener('click', function (e) {
+    if (e.target && e.target.nodeName === "LI") {
+        var roomId = e.target.getAttribute('data-room');
+        enterRoom(roomId);
+    }
+});
 
 usernameForm.addEventListener('submit', connect, true);
 messageForm.addEventListener('submit', sendMessage, true);

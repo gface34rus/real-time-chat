@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * Сущность сообщения чата.
+ * Представляет собой сообщение, сохраняемое в базе данных.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,18 +22,37 @@ import java.util.Date;
 @Entity
 public class ChatMessage {
 
+    /**
+     * Уникальный идентификатор сообщения.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Текст сообщения.
+     */
     private String content;
+
+    /**
+     * Имя отправителя.
+     */
     private String sender;
+
+    /**
+     * Тип сообщения (CHAT, JOIN, LEAVE, TYPING).
+     */
     private MessageType type;
 
-    // Default room is "public"
+    /**
+     * Идентификатор комнаты (по умолчанию "public").
+     */
     @Builder.Default
     private String roomId = "public";
 
+    /**
+     * Время отправки сообщения.
+     */
     private Date timestamp;
 
     public Long getId() {

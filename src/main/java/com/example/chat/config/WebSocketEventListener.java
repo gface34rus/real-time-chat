@@ -19,6 +19,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 public class WebSocketEventListener {
 
+
     private final SimpMessageSendingOperations messagingTemplate;
 
     /**

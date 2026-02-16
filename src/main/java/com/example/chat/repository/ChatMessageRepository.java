@@ -17,5 +17,6 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
      * @param roomId идентификатор комнаты
      * @return список сообщений
      */
+
     List<ChatMessage> findByRoomId(String roomId);
 }

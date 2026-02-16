@@ -34,6 +34,7 @@ public class ChatController {
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
         chatMessage.setTimestamp(new Date());
 
+
         // Установка комнаты по умолчанию, если не указана
         if (chatMessage.getRoomId() == null || chatMessage.getRoomId().isEmpty()) {
             chatMessage.setRoomId("public");

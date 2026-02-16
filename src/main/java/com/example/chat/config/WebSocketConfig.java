@@ -15,6 +15,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 
+
+
+
     /**
      * Регистрирует эндпоинты, к которым будут подключаться клиенты.
      * В данном случае регистрируется эндпоинт "/ws" с поддержкой SockJS.
